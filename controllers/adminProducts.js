@@ -2,7 +2,6 @@ const { faker } = require("@faker-js/faker");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 const { deleteFile } = require("../utils/file");
-const product = require("../models/Product");
 const { validationResult } = require("express-validator");
 
 exports.getProducts = async (req, res, next) => {
@@ -87,6 +86,7 @@ exports.createRandomProducts = async (req, res, next) => {
 };
 
 exports.postProduct = async (req, res, next) => {
+  console.log("req.body: ", req.body);
   const { name, oldPrice, discount, shortDesc, fullDesc, stockQty, categoryId, images, thumbnail } =
     req.body;
 
@@ -125,19 +125,29 @@ exports.postProduct = async (req, res, next) => {
 };
 
 exports.updateProduct = async (req, res, next) => {
-  const { name, oldPrice, discount, oldImages, shortDesc, fullDesc, stockQty, categoryId } =
-    req.body;
+  const {
+    name,
+    oldPrice,
+    discount,
+    oldImages,
+    shortDesc,
+    fullDesc,
+    stockQty,
+    categoryId,
+    thumb,
+    images,
+  } = req.body;
   const { productId } = req.params;
 
-  const images = req.files.map((item) => item.path.replace("\\", "/"));
-  const imageStrings = images.join(", ");
-  const thumb = images.find((image) => image.includes("thumb"));
+  // const images = req.files.map((item) => item.path.replace("\\", "/"));
+  // const imageStrings = images.join(", ");
+  // const thumb = images.find((image) => image.includes("thumb"));
 
-  console.log("req.files", req.files);
-  console.log("images", images);
-  console.log("thumb", thumb);
-  const isEmptyFiles = req.files.length === 0;
-  const isDifferentImages = imageStrings !== oldImages;
+  // console.log("req.files", req.files);
+  // console.log("images", images);
+  // console.log("thumb", thumb);
+  // const isEmptyFiles = req.files.length === 0;
+  // const isDifferentImages = imageStrings !== oldImages;
 
   // if (req.files.length > 0) {
   // }
@@ -153,29 +163,29 @@ exports.updateProduct = async (req, res, next) => {
     // Find product by id
     const product = await Product.findById(productId);
 
-    console.log("product images: ", product.images);
-    console.log("old images: ", oldImages);
+    // console.log("product images: ", product.images);
+    // console.log("old images: ", oldImages);
 
     // Update product follow by that id
     product.name = name;
     product.oldPrice = +oldPrice;
     product.discount = +discount;
-    console.log("is difference: ", isDifferentImages);
-    console.log("is empty: ", isEmptyFiles);
+    // console.log("is difference: ", isDifferentImages);
+    // console.log("is empty: ", isEmptyFiles);
 
     // Trường hợp không up ảnh nào thì sao ???
-    if (isDifferentImages && !isEmptyFiles) {
-      console.log("updated images successfully!");
-      product.images = imageStrings;
-      product.thumbnail = thumb;
+    // if (isDifferentImages && !isEmptyFiles) {
+    // console.log("updated images successfully!");
+    product.images = images;
+    product.thumbnail = thumb;
 
-      oldImages?.split(", ").forEach((image) => {
-        deleteFile(image);
-      });
+    // oldImages?.split(", ").forEach((image) => {
+    //   deleteFile(image);
+    // });
 
-      console.log("delete old images successfully!", oldImages);
-      console.log("new images: ", imageStrings);
-    }
+    // console.log("delete old images successfully!", oldImages);
+    // console.log("new images: ", imageStrings);
+    // }
 
     product.shortDesc = shortDesc;
     product.fullDesc = fullDesc;
@@ -189,9 +199,9 @@ exports.updateProduct = async (req, res, next) => {
       product: response,
     });
 
-    if (isDifferentImages && !isEmptyFiles) {
-      // Delete images from source
-    }
+    // if (isDifferentImages && !isEmptyFiles) {
+    //   // Delete images from source
+    // }
   } catch (error) {
     if (!error) {
       const error = new Error("Failed to fetch products!");
@@ -218,10 +228,10 @@ exports.deleteProduct = async (req, res, next) => {
     });
 
     // Loop and Delete product images from images folder source
-    images?.split(", ").forEach((image) => {
-      deleteFile(image);
-      console.log("deleted: ", image);
-    });
+    // images?.split(", ").forEach((image) => {
+    //   deleteFile(image);
+    //   console.log("deleted: ", image);
+    // });
   } catch (error) {
     if (!error) {
       const error = new Error("Failed to delete product!");

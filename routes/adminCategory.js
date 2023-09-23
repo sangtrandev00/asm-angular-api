@@ -18,7 +18,7 @@ router.get("/categories/:categoryId", adminCategoriesController.getCategory);
 // Should put the middleware upload multer here at route
 router.post(
   "/category",
-  uploadMiddleware.single("cateImage"),
+  // uploadMiddleware.single("cateImage"),
   body("name")
     .isLength({ min: 3 })
     .withMessage("Please enter a input field category with at least 3 characters.")
@@ -35,7 +35,7 @@ router.post(
 // PUT CATE
 router.put(
   "/category/:categoryId",
-  uploadMiddleware.single("cateImage"),
+  // uploadMiddleware.single("cateImage"),
   body("name")
     .isLength({ min: 3 })
     .withMessage("Please enter a input field category with at least 3 characters.")

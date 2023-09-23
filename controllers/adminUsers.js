@@ -34,7 +34,7 @@ exports.getUser = async (req, res, next) => {
     });
   } catch (error) {
     if (!error) {
-      const error = new Error("Failed to fetch categories!");
+      const error = new Error("Failed to fetch user by id!");
       error.statusCode(422);
       return error;
     }
@@ -80,15 +80,15 @@ exports.createRandomUser = async (req, res, next) => {
 };
 
 exports.postUser = async (req, res, next) => {
-  const { name, email, phone, address, password, role } = req.body;
+  const { name, email, phone, address, password, role, avatar } = req.body;
 
-  console.log(req.file);
-  let avatar;
-  if (req.file) {
-    avatar = req.file.path.replace("\\", "/");
-  } else {
-    avatar = "images/user-avatar.jpg";
-  }
+  // console.log(req.file);
+  // let avatar;
+  // if (req.file) {
+  //   avatar = req.file.path.replace("\\", "/");
+  // } else {
+  //   avatar = "images/user-avatar.jpg";
+  // }
 
   //   No validate yet!
   try {
@@ -107,7 +107,7 @@ exports.postUser = async (req, res, next) => {
 
     res.status(201).json({
       message: "User created successfully!",
-      userId: result._id,
+      user: result,
     });
   } catch (error) {
     if (!error.statusCode) {
@@ -118,32 +118,35 @@ exports.postUser = async (req, res, next) => {
 };
 
 exports.updateUser = async (req, res, next) => {
-  const { name, address, oldAvatar, email, phone, role, password } = req.body;
+  const { name, address, email, phone, role, password, avatar } = req.body;
   const { userId } = req.params;
-  console.log(req.file);
-  console.log("old avatar: ", oldAvatar);
+  // console.log(req.file);
+  // console.log("old avatar: ", oldAvatar);
 
-  let avatar;
-  if (req.file) {
-    avatar = req.file.path.replace("\\", "/");
-  } else {
-    avatar = oldAvatar;
-  }
+  // if (req.file) {
+  //   avatar = req.file.path.replace("\\", "/");
+  // } else {
+  //   avatar = oldAvatar;
+  // }
   console.log("avatar: ", avatar);
 
   try {
     const currentUser = await User.findById(userId);
-    console.log("current user: ", currentUser);
+    // console.log("current user: ", currentUser);
     const hashedPassword = await bcrypt.hash(password, 12);
     currentUser.name = name;
     currentUser.address = address;
-    if (oldAvatar !== avatar) {
-      currentUser.avatar = avatar;
-      deleteFile(oldAvatar);
-      console.log("update avatar!");
-    }
+    // if (oldAvatar !== avatar) {
+    //   currentUser.avatar = avatar;
+    //   deleteFile(oldAvatar);
+    //   console.log("update avatar!");
+    // }
     currentUser.email = email;
-    currentUser.password = hashedPassword;
+
+    if (password) {
+      currentUser.password = hashedPassword;
+    }
+
     currentUser.phone = phone;
     currentUser.role = role;
     const response = await currentUser.save();
@@ -175,7 +178,7 @@ exports.deleteUser = async (req, res, next) => {
     });
     // Delete avatar image
 
-    !avatar.startsWith("http") && deleteFile(avatar);
+    // !avatar.startsWith("http") && deleteFile(avatar);
   } catch (error) {
     if (!error) {
       const error = new Error("Failed to fetch categories!");

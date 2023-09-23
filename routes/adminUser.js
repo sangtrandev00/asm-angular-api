@@ -17,12 +17,16 @@ router.get("/users/:userId", adminUserController.getUser);
 router.get("/random-users", adminUserController.createRandomUser);
 
 // POST USER (What is the order when using middleware like this ? To combine validation )
-router.post("/user", uploadMiddleware.single("avatar"), adminUserController.postUser);
+router.post(
+  "/user",
+  //  uploadMiddleware.single("avatar"),
+  adminUserController.postUser
+);
 
 // PUT CATE
 router.put(
   "/user/:userId",
-  uploadMiddleware.single("avatar"),
+  // uploadMiddleware.single("avatar"),
 
   adminUserController.updateUser
 );

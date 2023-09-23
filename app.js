@@ -16,12 +16,12 @@ const app = express();
 
 const port = process.env.PORT || 8080;
 
-// const MONGODB_URI = "mongodb://127.0.0.1:27017/fullstack_es6";
+// const MONGODB_URI = "mongodb://127.0.0.1:27017/angular_api";
 
 const MONGODB_URI =
-  "mongodb+srv://nhatsang0101:48nJ1AfSQzAeKHoC@cluster0.aup360f.mongodb.net/fullstack_es6";
+  "mongodb+srv://nhatsang0101:48nJ1AfSQzAeKHoC@cluster0.aup360f.mongodb.net/angular_api";
 
-// app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 

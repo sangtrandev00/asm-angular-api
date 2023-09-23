@@ -18,6 +18,8 @@ exports.getCategories = async (req, res, next) => {
         description: cateItem.description,
         cateImage: cateItem.cateImage,
         products: products.length,
+        createdAt: cateItem.createdAt,
+        updatedAt: cateItem.updatedAt,
       };
 
       result.push(cateTemplate);
@@ -95,7 +97,7 @@ exports.postCategory = async (req, res, next) => {
 };
 
 exports.updateCategories = async (req, res, next) => {
-  const { name, description, oldImage } = req.body;
+  const { name, description, cateImage } = req.body;
 
   const { categoryId } = req.params;
 
@@ -119,15 +121,16 @@ exports.updateCategories = async (req, res, next) => {
     const currentCategory = await Category.findById(categoryId);
     currentCategory.name = name;
     currentCategory.description = description;
+    currentCategory.cateImage = cateImage;
     // If file is empty get the old one!
-    if (req.file) {
-      console.log(req.file);
-      const cateImage = req.file.path.replace("\\", "/");
-      currentCategory.cateImage = cateImage;
+    // if (req.file) {
+    //   console.log(req.file);
+    //   const cateImage = req.file.path.replace("\\", "/");
+    //   currentCategory.cateImage = cateImage;
 
-      // Delete the old image
-      deleteFile(oldImage);
-    }
+    //   // Delete the old image
+    //   deleteFile(oldImage);
+    // }
 
     const response = await currentCategory.save();
 
@@ -158,7 +161,7 @@ exports.deleteCategory = async (req, res, next) => {
     });
 
     // delete file when delete cate row
-    deleteFile(cateImage);
+    // deleteFile(cateImage);
   } catch (error) {
     if (!error) {
       const error = new Error("Failed to fetch categories!");
