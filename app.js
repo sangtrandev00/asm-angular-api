@@ -12,6 +12,7 @@ const adminProductRouter = require("./routes/adminProduct");
 const adminUserRouter = require("./routes/adminUser");
 const adminOrderRouter = require("./routes/adminOrder");
 const shopRouter = require("./routes/shop");
+const reportRouter = require("./routes/report");
 const app = express();
 
 const port = process.env.PORT || 8080;
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 
 // uploadCategoryMiddleware,
 app.use("/auth", authRouter);
+app.use("/admin", reportRouter);
 app.use("/admin", adminCategoryRouter);
 app.use("/admin", adminProductRouter);
 app.use("/admin", adminUserRouter);

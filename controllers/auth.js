@@ -146,7 +146,9 @@ exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    const userDoc = await User.findOne({ email, providerId: "local" });
+    console.log("email: ", email);
+
+    const userDoc = await User.findOne({ email });
 
     if (!userDoc) {
       const error = new customError("email", "Could not find user by email!");
