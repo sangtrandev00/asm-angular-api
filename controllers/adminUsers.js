@@ -136,11 +136,6 @@ exports.updateUser = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 12);
     currentUser.name = name;
     currentUser.address = address;
-    // if (oldAvatar !== avatar) {
-    //   currentUser.avatar = avatar;
-    //   deleteFile(oldAvatar);
-    //   console.log("update avatar!");
-    // }
     currentUser.email = email;
 
     if (password) {
@@ -149,7 +144,10 @@ exports.updateUser = async (req, res, next) => {
 
     currentUser.phone = phone;
     currentUser.role = role;
+    currentUser.avatar = avatar;
     const response = await currentUser.save();
+
+    console.log("update response user: ", response);
 
     res.status(200).json({
       message: "Update user succesfully!",

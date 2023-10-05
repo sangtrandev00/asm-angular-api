@@ -86,14 +86,11 @@ exports.createRandomProducts = async (req, res, next) => {
 };
 
 exports.postProduct = async (req, res, next) => {
-  console.log("req.body: ", req.body);
   const { name, oldPrice, discount, shortDesc, fullDesc, stockQty, categoryId, images, thumbnail } =
     req.body;
 
-  console.log("req.body: ", req.body);
-
-  // console.log(req.files);
   // const images = req.files.map((item) => item.path.replace("\\", "/"));
+
   const thumb = thumbnail;
   try {
     const product = new Product({
@@ -108,11 +105,22 @@ exports.postProduct = async (req, res, next) => {
       categoryId,
     });
 
-    const response = await product.save();
+    const productResponse = await product.save();
+
+    const category = await Category.findById(categoryId);
+
+    const result = {
+      ...productResponse._doc,
+      categoryId: {
+        _id: productResponse.categoryId._id,
+        name: category.name,
+        cateImage: category.cateImage,
+      },
+    };
 
     res.json({
       message: "Create product successfully!",
-      product: response,
+      product: result,
     });
   } catch (error) {
     if (!error) {
@@ -134,74 +142,47 @@ exports.updateProduct = async (req, res, next) => {
     fullDesc,
     stockQty,
     categoryId,
-    thumb,
+    thumbnail,
     images,
   } = req.body;
+
   const { productId } = req.params;
 
-  // const images = req.files.map((item) => item.path.replace("\\", "/"));
-  // const imageStrings = images.join(", ");
-  // const thumb = images.find((image) => image.includes("thumb"));
-
-  // console.log("req.files", req.files);
-  // console.log("images", images);
-  // console.log("thumb", thumb);
-  // const isEmptyFiles = req.files.length === 0;
-  // const isDifferentImages = imageStrings !== oldImages;
-
-  // if (req.files.length > 0) {
-  // }
-  // console.log("isEmptyFiles", isEmptyFiles);
-
-  // if (isDifferentImages && !isEmptyFiles) {
-  //   console.log("delete old images successfully!", oldImages);
-  //   console.log("new images: ", imageStrings);
-  // }
-
-  // return;
   try {
     // Find product by id
     const product = await Product.findById(productId);
-
-    // console.log("product images: ", product.images);
-    // console.log("old images: ", oldImages);
 
     // Update product follow by that id
     product.name = name;
     product.oldPrice = +oldPrice;
     product.discount = +discount;
-    // console.log("is difference: ", isDifferentImages);
-    // console.log("is empty: ", isEmptyFiles);
 
     // Trường hợp không up ảnh nào thì sao ???
-    // if (isDifferentImages && !isEmptyFiles) {
-    // console.log("updated images successfully!");
+
+    const category = await Category.findById(categoryId);
+
     product.images = images;
-    product.thumbnail = thumb;
-
-    // oldImages?.split(", ").forEach((image) => {
-    //   deleteFile(image);
-    // });
-
-    // console.log("delete old images successfully!", oldImages);
-    // console.log("new images: ", imageStrings);
-    // }
-
+    product.thumbnail = thumbnail;
     product.shortDesc = shortDesc;
     product.fullDesc = fullDesc;
     product.stockQty = +stockQty;
     product.categoryId = categoryId;
 
-    const response = await product.save();
+    const productResponse = await product.save();
+
+    const result = {
+      ...productResponse._doc,
+      categoryId: {
+        _id: productResponse.categoryId._id,
+        name: category.name,
+        cateImage: category.cateImage,
+      },
+    };
 
     res.json({
       message: "Update product successfully!",
-      product: response,
+      product: result,
     });
-
-    // if (isDifferentImages && !isEmptyFiles) {
-    //   // Delete images from source
-    // }
   } catch (error) {
     if (!error) {
       const error = new Error("Failed to fetch products!");

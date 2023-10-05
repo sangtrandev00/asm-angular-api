@@ -57,7 +57,7 @@ exports.getCategory = async (req, res, next) => {
 };
 
 exports.postCategory = async (req, res, next) => {
-  const { name, description } = req.body;
+  const { name, description, cateImage } = req.body;
 
   const errors = validationResult(req);
 
@@ -78,12 +78,19 @@ exports.postCategory = async (req, res, next) => {
       throw validationError;
     }
 
-    const imageUrl = req.file ? req.file.path.replace("\\", "/") : "images/user-avatar.jpg";
-    const category = new Category({ name, cateImage: imageUrl, description });
-    const response = await category.save();
+    // const imageUrl = req.file ? req.file.path.replace("\\", "/") : "images/user-avatar.jpg";
+    const category = new Category({ name, cateImage: cateImage, description });
+    const categoryResponse = await category.save();
+
+    const result = {
+      ...categoryResponse._doc,
+      products: 0,
+    };
+    // const products = await Product.find({ categoryId: cateItem._id });
+
     res.status(201).json({
       message: "Create category succesfully!",
-      category: response,
+      category: result,
     });
   } catch (error) {
     if (!error) {
@@ -122,21 +129,19 @@ exports.updateCategories = async (req, res, next) => {
     currentCategory.name = name;
     currentCategory.description = description;
     currentCategory.cateImage = cateImage;
-    // If file is empty get the old one!
-    // if (req.file) {
-    //   console.log(req.file);
-    //   const cateImage = req.file.path.replace("\\", "/");
-    //   currentCategory.cateImage = cateImage;
 
-    //   // Delete the old image
-    //   deleteFile(oldImage);
-    // }
+    const products = await Product.find({ categoryId });
 
     const response = await currentCategory.save();
 
+    const result = {
+      ...response._doc,
+      products: products.length,
+    };
+
     res.status(200).json({
       message: "Update category succesfully!",
-      category: response,
+      category: result,
     });
   } catch (error) {
     if (!error) {
