@@ -38,7 +38,7 @@ exports.signup = async (req, res, next) => {
       email,
       name,
       password: hashedPassword,
-      role,
+      role: "client",
       avatar,
       providerId: providerId || "local",
     };
@@ -161,9 +161,14 @@ exports.login = async (req, res, next) => {
       throw new customError("password", "Password wrong!");
     }
 
+    // Check if the user is a client
+    if (userDoc.role === "client") {
+      throw new customError("Unauthorized", "Couldn't authorize for this current role!");
+    }
+
     // Create json webtoken here!!!
     const token = jwt.sign(
-      { email: userDoc.email, userId: userDoc._id.toString() },
+      { email: userDoc.email, userId: userDoc._id.toString(), role: userDoc.role },
       "somesupersecret",
       { expiresIn: "1h" }
     );
