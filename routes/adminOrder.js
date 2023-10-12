@@ -7,14 +7,14 @@ const router = express.Router();
 const { check, body } = require("express-validator");
 
 // GET orders
-router.get("/orders", adminOrderController.getOrders);
+router.get("/orders", isAuth, adminOrderController.getOrders);
 
 // GET random orders
 
-router.get("/orders-random", adminOrderController.randomOrders);
+router.get("/orders-random", isAuth, adminOrderController.randomOrders);
 
 // GET ORDER ID
-router.get("/orders/:orderId", adminOrderController.getOrder);
+router.get("/orders/:orderId", isAuth, adminOrderController.getOrder);
 
 // POST ORDER
 // router.post("/user",adminOrderController.postUser);
@@ -22,9 +22,9 @@ router.get("/orders/:orderId", adminOrderController.getOrder);
 // PATCH ORDER
 // router.put("/order/:orderId",adminOrderController.updateOrder);
 
-router.patch("/orders/:orderId", adminOrderController.updateOrderStatus);
+router.patch("/orders/:orderId", isAuth, adminOrderController.updateOrderStatus);
 
 // DELETE ORDER
-router.delete("/orders/:orderId", adminOrderController.deleteOrder);
+router.delete("/orders/:orderId", isAuth, adminOrderController.deleteOrder);
 
 module.exports = router;

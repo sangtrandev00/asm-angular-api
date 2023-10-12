@@ -9,16 +9,17 @@ const Category = require("../models/Category");
 const router = express.Router();
 
 // GET CATEGORIES
-router.get("/categories", adminCategoriesController.getCategories);
+router.get("/categories", isAuth, adminCategoriesController.getCategories);
 
 // GET CATEGORY
-router.get("/categories/:categoryId", adminCategoriesController.getCategory);
+router.get("/categories/:categoryId", isAuth, adminCategoriesController.getCategory);
 
 // POST CATE
 // Should put the middleware upload multer here at route
 router.post(
   "/category",
   // uploadMiddleware.single("cateImage"),
+  isAuth,
   body("name")
     .isLength({ min: 3 })
     .withMessage("Please enter a input field category with at least 3 characters.")
@@ -36,6 +37,7 @@ router.post(
 router.put(
   "/category/:categoryId",
   // uploadMiddleware.single("cateImage"),
+  isAuth,
   body("name")
     .isLength({ min: 3 })
     .withMessage("Please enter a input field category with at least 3 characters.")
@@ -50,6 +52,6 @@ router.put(
 );
 
 // DELETE CATE
-router.delete("/categories/:categoryId", adminCategoriesController.deleteCategory);
+router.delete("/categories/:categoryId", isAuth, adminCategoriesController.deleteCategory);
 
 module.exports = router;
