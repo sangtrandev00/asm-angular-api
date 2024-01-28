@@ -7,6 +7,9 @@ const { check, body } = require("express-validator");
 // GET PRODUCTS/
 router.get("/products", shopController.getProducts);
 
+// GET PRODUCTS/
+router.get("/products-test", shopController.getProducts);
+
 // GET PRODUCT
 router.get("/products/:productId", shopController.getProduct);
 
