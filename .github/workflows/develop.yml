@@ -18,3 +18,8 @@ jobs:
         username: ${{secrets.ftp_username}}
         password: ${{ secrets.ftp_password }}
         server-dir: /angular-rest-api.trannhatsang.com/
+    - name: 🔄 Restart Server
+      run: |
+          cd /home/zvbljimh/angular-rest-api.trannhatsang.com
+          npm install
+          npm run start
