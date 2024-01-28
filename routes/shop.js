@@ -18,6 +18,9 @@ router.get("/products/:productId", shopController.getProduct);
 // GET CATES
 router.get("/categories", shopController.getCategories);
 
+// GET CATES
+router.get("/categories-test", shopController.getCategories);
+
 // GET MAX PRICE
 router.get("/product-max-price", shopController.getMaxPrice);
 
