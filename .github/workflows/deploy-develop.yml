@@ -1,8 +1,10 @@
-on: 
+on:
   push:
     branches:
       - develop
+
 name: 🚀 Deploy website on push
+
 jobs:
   web-deploy:
     name: 🎉 Deploy
@@ -16,5 +18,9 @@ jobs:
       with:
         server: ftp.trannhatsang.com
         username: ${{secrets.ftp_username}}
-        password: ${{ secrets.ftp_password }}
+        password: ${{secrets.ftp_password}}
         server-dir: /angular-rest-api.trannhatsang.com/
+
+    - name: 🔄 Restart Application
+      run: |
+        curl -X POST "http://42.114.102.251:2082/passenger?app=angular-rest-api.trannhatsang.com&action=restart" --user "zvbljimh:phaithanhcong10" --basic
