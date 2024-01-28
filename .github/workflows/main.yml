@@ -15,3 +15,10 @@ jobs:
         username: ${{secrets.ftp_username}}
         password: ${{ secrets.ftp_password }}
         server-dir: /angular-rest-api.trannhatsang.com/
+
+    - name: 🔄 Restart Server
+      run: |
+          source /home/zvbljimh/nodevenv/angular-rest-api.trannhatsang.com/14/bin/activate
+          cd /home/zvbljimh/angular-rest-api.trannhatsang.com
+          npm install
+          npm start
