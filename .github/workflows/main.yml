@@ -19,4 +19,4 @@ jobs:
     - name: 🔄 Restart Server
       run: |
           npm install
-          npm start
+          npm run start
